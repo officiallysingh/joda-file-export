@@ -34,7 +34,7 @@ public class ValueAtRisk implements ImmutableBean {
     // @formatter:off
     @DownloadOverrides({
             @DownloadOverride(fieldName = "currency.source", download = @Download(columnName = "Base Currency")),
-            @DownloadOverride(fieldName = "currency.target", download = @Download(columnName = "Target Currency")) 
+            @DownloadOverride(fieldName = "currency.target", download = @Download(columnName = "Foreign Currency")) 
         }
     )
     // @formatter:on

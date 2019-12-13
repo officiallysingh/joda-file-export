@@ -231,6 +231,7 @@ You may either want to download a file in a web application or just dump the sam
 * Need to customise excel sheet column styles
 * Need to externalize file header column names in a properties file
 * Rather than downloading the file, you may need to dump a file at a given location.
+* By default the order of columns in file would be as per the order of properties defined in bean, in case you need to change the default order.
 * Or any other reason as per your need
 
 So you can define any new strategy of file writing simply by implementing FileWriterStrategy interface. 
@@ -322,6 +323,20 @@ public class CustomWriterStrategyTest {
 
         exportContext.export();
     }
+}
+```
+
+The order of columns in the file can be customised as per your needs by providing a custom File writer strategy and reordering the columns headers and row data in following methods of the strategy implementation.
+
+```java
+@Override
+public void writeHeader(final String[] columnHeaders) {
+// Change the order of column's headers by sorting the columnHeaders array as per your sorting logic
+}
+
+@Override
+public void writeRow(final List<String> rowData) {
+// Change the order of column's data by sorting the rowData list as per your sorting logic
 }
 ```
 
@@ -439,6 +454,51 @@ public class ExportException extends RuntimeException {
 
 }
 ```
+
+### Collection support
+
+Ideally the exported file would have a fixed structure. In case the data is in different structure, you need to normalize the data as per the model to be exported. As or now no collection is supported in POJO bean and even its highly unlikely to have a collection in the data bean, because in that case you may not have a fixed number of columns in the file.For example if data bean is supposed to have a list then you may not be able to have a fixed number of columns in the file as list content may vary for different records.
+
+As of now only Map is supported in the export candidate bean, that too with some restrictions. 
+* It should be used only with a fixed number of entries otherwise the number of columns in file would be too many
+* Both Key and Value of the map must be custom class object.
+* The Key class must implement Distinguishable interface, overriding two methods
+
+```java
+public interface Distinguishable {
+    
+    public String label();
+
+    public String descriminator();
+}
+```
+* The value must be a Joda bean, refer to below class for reference
+
+```java
+@AllArgsConstructor(staticName = "of")
+@BeanDefinition
+public class ValueAtRisk implements ImmutableBean {
+
+    .....
+    .......
+
+    @PropertyDefinition
+    private final Map<VDWType, ValueDateWise> valueDateWises;
+```
+* The exported file would contain data for each Map entry's value object sequentially, Key's label would be used as a header column prefix to differential between the columns for different entries. Refer to below exported file for one of the examples in source code, where export candidate bean contains a Map with four kind of rates i.e. Cash, Tom, Spot and Future
+
+| Base Currency | Foreign Currency | Ask Value | Bid Value | Bank | Agent | Cash Cost Sell | Cash Cost Buy | Cash Settlement Rate Sell | Cash Settlement Rate Buy | Tom Cost Sell | Tom Cost Buy | Tom Settlement Rate Sell | Tom Settlement Rate Buy | Spot Cost Sell | Spot Cost Buy | Spot Settlement Rate Sell | Spot Settlement Rate Buy | Future Cost Sell | Future Cost Buy | Future Settlement Rate Sell | Future Settlement Rate Buy | Updated On | Status |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | -------------  ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+INR | USD | 0.00000000 | 0.00000000 | HDFC-0 | TRAVELLER-0 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 2019-12-12 06:04:01PM (GMT) | Enabled
+INR | USD | 0.00000000 | 0.00000000 | HDFC-1 | TRAVELLER-1 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 2019-12-12 06:04:01PM (GMT) | Enabled
+INR | USD | 0.00000000 | 0.00000000 | HDFC-2 | TRAVELLER-2 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 0.00000000 | 1.00000000 | 1.00000000 | 0.00000000 | 2019-12-12 06:04:01PM (GMT) | Enabled
+GBP | AED | 1.00000000 | 1.00000000 | HSBC-3 | INTERNATIONAL-3 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 2019-12-12 06:04:01PM (GMT) | Enabled
+GBP | AED | 1.00000000 | 1.00000000 | HSBC-4 | INTERNATIONAL-4 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 2019-12-12 06:04:01PM (GMT) | Enabled
+GBP | AED | 1.00000000 | 1.00000000 | HSBC-5 | INTERNATIONAL-5 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 2019-12-12 06:04:01PM (GMT) | Enabled
+GBP | AED | 1.00000000 | 1.00000000 | HSBC-6 | INTERNATIONAL-6 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 123.34000000 | 430.23000000 | 106.05000000 | 203.98000000 | 2019-12-12 06:04:01PM (GMT) | Enabled
+INR | PKR | 34.00400000 | 26.10800000 |  | AGENT_SMITH-7 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 |  | Enabled
+INR | PKR | 34.00400000 | 26.10800000 |  | AGENT_SMITH-8 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 |  | Enabled
+INR | PKR | 34.00400000 | 26.10800000 |  | AGENT_SMITH-9 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 | 123.34000000 | 430.23000000 | 88.99000000 | 100.20000000 |  | Enabled
 
 ### Known issues
 
