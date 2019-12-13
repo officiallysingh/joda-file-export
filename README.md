@@ -324,3 +324,96 @@ public class CustomWriterStrategyTest {
     }
 }
 ```
+
+### Type converters
+
+The properties on bean are written in file in String format only. So it is a very basic requirement to convert the bean properties to a required string. For example you may need to format date time to a specific format while writing to file. So you can define your custom type converters as follows. All such type converters then needs to be registered in Joda StringConvert as follows.
+
+```java
+public class BigDecimalJodaConverter implements TypedStringConverter<BigDecimal> {
+
+    @Override
+    public String convertToString(final BigDecimal value) {
+        return String.format("%." + RateValue.DECIMAL_POINTS_8 + "f", value);
+    }
+
+    @Override
+    public BigDecimal convertFromString(final Class<? extends BigDecimal> cls, String str) {
+        return new BigDecimal(str);
+    }
+
+    @Override
+    public Class<?> getEffectiveType() {
+        return BigDecimal.class;
+    }
+}
+```
+
+Similar to above type converter you may have others also. After defining all such type converters register them in global Joda StringConvert as follows. ExportContext expects an instance of StringConvert while exporting the file. It is recommended to have a singleton instance of StringConvert, but in case you need different converts for same class such as in one case you want to write Boolean value as YES/NO but in other case ENABLED/DISABLED, then you may need to create multiple instances of StringConvert and use respective instance as per the conversion required. 
+You can find following type converters in source code.
+
+```java
+@Configuration
+public class JodaConfig {
+
+    @Bean
+    public StringConvert jodaConverter() {
+        StringConvert stringConvert = StringConvert.create();
+        stringConvert.register(BigDecimal.class, new BigDecimalJodaConverter());
+        stringConvert.register(Boolean.class, new BooleanJodaConverter());
+        stringConvert.register(CurrencyUnit.class, new CurrencyUnitJodaConverter());
+        stringConvert.register(ZonedDateTime.class, new ZonedDateTimeJodaConverter());
+        return stringConvert;
+    }
+}
+```
+
+### Going reactive
+
+Normally the data to export is fetched from some database. If data set is small then you can just fetch a collection and pass the collection to export API. Or if the data set is large you may need to fetch the data page by page and sequentially push the data into a flux using any of programmatically generating Flux strategy. There are some databases like Postgres or MongoDB, which have native reactive support and you can simply get a Flux from their Spring Data repository. 
+
+You can programmatically push your data into flux and pass the same to Export API as follows.
+
+```java
+Iterator<InterBankRate> itr = DataProvider.getInterBankRates().iterator();
+        Flux<InterBankRate> dataStream = Flux.generate(() -> itr, (state, sink) -> {
+            if (state.hasNext()) {
+                sink.next(state.next());
+            } else {
+                sink.complete();
+            }
+            return state;
+        });
+
+        FileExportContext.<InterBankRate>of(true).withJodaConverter(this.jodaConverter)
+                .downloadAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response).from(dataStream)
+                .export();
+```
+
+If there are multiple data sources such as from some Queue, API and DB etc., then you can you spring reactor’s thread safe EmitterProcessor and FluxSink as follows.
+
+```java
+EmitterProcessor<RateRecord> emitterFlux = EmitterProcessor.create();
+  
+  .....
+  ....
+   
+FluxSink<RateRecord> rateSink = emitterFlux .sink();
+
+....
+...
+
+FileExportContext.<InterBankRate>of().withJodaConverter(this.jodaConverter)
+                    .downloadAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
+                            response)
+                    .from(emitterFlux).export();
+
+```
+
+As with Spring reactor Flux, nothing happens until  the flux is subscribed. Hence the export is only started once you call the export() method on ExportContex.
+
+
+### Known issues
+
+The export candidate bean may also compose other beans till any depth. But if while exported any of the composed bean is found as null, then the export would fail. So you need to make sure none of the bean objects in the data set is null. The primitives and non Joda beans properties can obviously be null. So as given in the examples Cost.java is a joda bean composed in multiple export candidate classes, the value of Cost should never be null. If you do not have any Cost value the simple initialize it with null sell and buy values.
+
