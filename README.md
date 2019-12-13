@@ -487,7 +487,7 @@ public class ValueAtRisk implements ImmutableBean {
 ```
 * The exported file would contain data for each Map entry's value object sequentially, Key's label would be used as a header column prefix to differential between the columns for different entries. Refer to below exported file for one of the examples in source code, where export candidate bean contains a Map with four kind of rates i.e. Cash, Tom, Spot and Future
 
-
+![Sample downloaded file screenshot](https://github.com/officiallysingh/joda-file-export/blob/master/Sample_File_With_Map.jpg)
 
 ### Known issues
 
