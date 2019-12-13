@@ -86,6 +86,7 @@ Add below maven depenencies into your project's pom.xml
 
 #### Git source contain the library code into below two packages
 Code is bundled as Spring boot based application, So simply run the application and browse through swagger at
+
 http://localhost:8080/swagger-ui.html
 
 Hit following URL to test file download
@@ -102,7 +103,7 @@ http://localhost:8080/api/jodaExport/withContextDownload?contextName=agent_speci
 
 ### Executing the file export
 
-Downloading a CSV file with name sample, writing blank if a property's value is found to be null. Using global StringConvert (jodaConverter), to convert properties to string while writing to file, which ever property class's type converter is registered with jodaConverter.
+Downloading a CSV file with name sample in default context, writing blank if a property's value is found to be null. Using global *StringConvert* (*jodaConverter*), to convert properties to string while writing to file, which ever property class's type converter is registered with *jodaConverter*.
 
 ```java
 @Autowired private StringConvert jodaConverter;
@@ -121,7 +122,7 @@ exportContext.export();
 
 ### Defining POJO as Joda Bean
 
-The Java bean to be used as data container must be written in an opinionated manner making it as a Joda bean, as follows. 
+*The export candidate Java bean to be used as data container while writing data to file must be written in an opinionated manner making it as a Joda bean*, as follows. 
 
 * POJO must be annotated with @BeanDefinition and extend either Bean or ImmutableBean class. 
 * All properties whose data is to be written in file must be annotated with @PropertyDefinition. If any property is to be ignored while file writing then do not annotate the property with @PropertyDefinition, so you can ignore any properties if required.
