@@ -432,7 +432,7 @@ FileExportContext.<InterBankRate>of().withJodaConverter(this.jodaConverter)
 
 ```
 The **EmitterProcessor**is thread safe so you can push data into **FluxSink** simultaneously,the same would be available in the **Flux** for consumption. Filewriting happens in single thread to retain the order of rows.
-As with Spring reactor **Flux**, **nothing happens until  the Flux is subscribed**. **Hence the export is only started once you call the export() method on ExportContex**.
+**As with Spring reactor Flux, nothing happens until  the Flux is subscribed**. **Hence the export is only started once you call the export() method on ExportContex**.
 
 ### Error handling
 There could be **IO** related exceptions or **Joda mis-configuration** of beans. In all error scenarios, all exceptions are wrapped into a single unchecked exception with different error codes and description message. In case any exception occurs the same is logged. You may get the error code and description from logs and take the required measures but you can not catch any of the exceptions as they occur in separate thread while processing the **Flux**.
