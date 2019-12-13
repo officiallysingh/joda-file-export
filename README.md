@@ -83,16 +83,21 @@ Add below maven depenencies into your project's pom.xml
 
 #### Git source contain the library code into below two packages
 Code is bundled as Spring boot based application, So simply run the application and browse through swagger at
-(http://localhost:8080/swagger-ui.html)
+http://localhost:8080/swagger-ui.html
 
-Hit following URL to execute file download
+Hit following URL to test file download
 
-(http://localhost:8080/api/jodaExport/reactiveDownload?fileName=rx_sample&downloadFileType=CSV)
+http://localhost:8080/api/jodaExport/collectionDownload?fileName=inter_bank_rates&downloadFileType=CSV
 
-(http://localhost:8080/api/jodaExport/withContextDownload?contextName=bank_specific&fileName=var_rates&downloadFileType=EXCEL)
+http://localhost:8080/api/jodaExport/reactiveDownload?fileName=rx_sample&downloadFileType=CSV
+
+http://localhost:8080/api/jodaExport/withContextDownload?contextName=bank_specific&fileName=var_rates&downloadFileType=EXCEL
+
 ## Using joda-file-export
 
-Downloading a CSV file with name sample, writing blank if a property's value is found to be null. Using global StringConvert (jodaConverter), to convert properties to string while writing to file, which ever property class's type converter is registered with jodaConverter
+### Executing the file export
+
+Downloading a CSV file with name sample, writing blank if a property's value is found to be null. Using global StringConvert (jodaConverter), to convert properties to string while writing to file, which ever property class's type converter is registered with jodaConverter.
 
 ```java
 @Autowired private StringConvert jodaConverter;
@@ -108,3 +113,5 @@ ExportContext<InterBankRate> exportContext = FileExportContext.<InterBankRate>of
                     .from(DataProvider.getInterBankRates());
 exportContext.export();
 ```
+
+### Defining POJO as Joda Bean
