@@ -76,9 +76,26 @@ Add below maven depenencies into your project's pom.xml
 ```
 
 
-#### Git source contain the library code into below two packages package com.xebia.util.export
+#### Git source contain the library code into below two packages
 
 * **com.xebia.util.export** Complete joda-file-export library code, copy this code into your source directory
 * **com.zcompany.example** All example code elaborating the use of library, play with the examples to understand the usage
 
+## Using joda-file-export
 
+Downloading a CSV file with name sample, writing blank if a property's value is found to be null. Using global StringConvert (jodaConverter), to convert properties to string while writing to file, which ever property class's type converter is registered with jodaConverter
+
+```java
+@Autowired private StringConvert jodaConverter;
+    ...
+    .....
+    
+final HttpServletResponse response
+......
+
+ExportContext<InterBankRate> exportContext = FileExportContext.<InterBankRate>of(true)
+                    .withJodaConverter(this.jodaConverter)
+                    .downloadAsCSV("sample", response)
+                    .from(DataProvider.getInterBankRates());
+exportContext.export();
+```
