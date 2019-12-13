@@ -295,3 +295,32 @@ public class ExternalizedHeaderLabelsDumpCSVStrategy implements FileWriterStrate
     }
 }
 ```
+
+And then use above strategy in your file export as follows.
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class CustomWriterStrategyTest {
+
+    @Autowired
+    private StringConvert jodaConverter;
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @Test
+    public void test() {
+
+        final String fileName = "Custom_Header_test";
+
+        final String location = "D:\\export_dump";
+
+        ExportContext<Timesheet> exportContext = FileExportContext.<Timesheet>of().withJodaConverter(this.jodaConverter)
+                .download(ExternalizedHeaderLabelsDumpCSVStrategy.of(fileName, location, this.messageSource))
+                .from(DataProvider.getTimesheets());
+
+        exportContext.export();
+    }
+}
+```
