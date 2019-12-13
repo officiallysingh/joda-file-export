@@ -122,7 +122,7 @@ exportContext.export();
 
 ### Defining POJO as Joda Bean
 
-*The export candidate Java bean to be used as data container while writing data to file must be written in an opinionated manner making it as a Joda bean*, as follows. 
+**The export candidate Java bean to be used as data container while writing data to file must be written in an opinionated manner making it as a Joda bean**, as follows. 
 
 * POJO must be annotated with @BeanDefinition and extend either Bean or ImmutableBean class. 
 * All properties whose data is to be written in file must be annotated with @PropertyDefinition. If any property is to be ignored while file writing then do not annotate the property with @PropertyDefinition, so you can ignore any properties if required.
