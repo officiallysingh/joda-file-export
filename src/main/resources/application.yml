@@ -1,0 +1,36 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overridden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+#
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+# set -Dspring.profiles.active=<dev|sit|int> as JVM argument to run in desired profile
+# If no profile is specified explicitly, application will fall back to default profile, which is "local"
+
+logging:
+    path: logs
+    file: ${logging.path}/joda-export.log  
+    level:
+        ROOT: INFO
+        #org.springframework: DEBUG
+                
+spring:
+    application:
+        name: pricing-engine-service
+
+    profiles:
+        # The commented value for `active` can be replaced with valid Spring profiles to load.
+        # Otherwise, it will be filled in by maven when building the WAR file
+        # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
+        active: #spring.profiles.active#
+        
+    messages:
+        basename: messages
+        
