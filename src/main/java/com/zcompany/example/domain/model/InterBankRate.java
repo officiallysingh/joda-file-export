@@ -18,13 +18,11 @@ import org.joda.beans.impl.direct.DirectMetaPropertyMap;
 
 import com.xebia.util.export.annotation.Download;
 
-import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor(staticName = "of")
 @BeanDefinition
-@ApiModel(value = "ibrResponse", description = "View Model for normal or bank wise IBR")
 public class InterBankRate implements ImmutableBean {
 
     @Getter
