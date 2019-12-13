@@ -1,5 +1,5 @@
 # Joda File Export
-Generic Java library based on Joda Beans and Spring reactor to export/download or dump files in various formats such as CSV, Excel etc.
+**Generic Java library based on Joda Beans and Spring reactor to export/download or dump files in various formats such as CSV, Excel, PDF etc.**
 
 _**<sub>Know more about [Joda Beans](https://www.joda.org/joda-beans/)!<sub>**_
 
