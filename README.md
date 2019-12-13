@@ -84,8 +84,7 @@ Add below maven depenencies into your project's pom.xml
 * **com.xebia.util.export** Complete joda-file-export library code, copy this code into your source directory
 * **com.zcompany.example** All example code elaborating the use of library, play with the examples to understand the usage
 
-#### Git source contain the library code into below two packages
-Code is bundled as Spring boot based application, So simply run the application and browse through swagger at
+Code is bundled as Spring boot application, So simply run the application and browse through swagger at
 
 http://localhost:8080/swagger-ui.html
 
