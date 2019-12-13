@@ -216,10 +216,82 @@ public class InterBankRate implements ImmutableBean {
 
 ```
 
-Exporting the file with above data bean in a context is as follows, So the following code would export agent property along with all other default or no context properties but ignore bank property.
+Exporting the file with above data bean in a context is as follows, So the following code would export agent property along with all other default or no context properties but ignore bank property in the exported file
 
 ```java
 FileExportContext.<ValueAtRisk>of("agent_specific", true).withJodaConverter(this.jodaConverter)
                     .downloadAsCSV("context_based", response)
                     .from(DataProvider.getValueAtRiskRates()).export();
+```
+
+### File writing strategies
+
+You may either want to download a file in a web application or just dump the same at a given location. These are just different strategies of file writing. By default there are two strategies bundled with library i.e. DownloadCSVFileStrategy.java and DownloadExcelFileStrategy.java to download file either in CSV or Excel format. But you may need your own custom file writing strategy in following cases
+* Need to export file in a different format such as PDF or RTF
+* Need to customise excel sheet column styles
+* Need to externalize file header column names in a properties file
+* Rather than downloading the file, you may need to dump a file at a given location.
+* Or any other reason as per your need
+
+So you can define any new strategy of file writing simply by implementing FileWriterStrategy interface. 
+One such custom strategy is given in the examples, ExternalizedHeaderLabelsDumpCSVStrategy.java as follows.
+
+```java
+@Slf4j
+public class ExternalizedHeaderLabelsDumpCSVStrategy implements FileWriterStrategy {
+
+    private ICsvListWriter csvWriter;
+
+    private FileWriter fileWriter;
+
+    private MessageSource messageSource;
+
+    private ExternalizedHeaderLabelsDumpCSVStrategy(final String fileName, final String location,
+            final MessageSource messageSource) {
+        try {
+            this.fileWriter = new FileWriter(
+                    location + System.getProperty("file.separator") + fileName + "." + FileType.CSV.extension());
+            this.csvWriter = new CsvListWriter(fileWriter, CsvPreference.STANDARD_PREFERENCE);
+        } catch (IOException e) {
+            throw ExportException.ioException(e);
+        }
+        this.messageSource = messageSource;
+    }
+
+    public static ExternalizedHeaderLabelsDumpCSVStrategy of(final String fileName, final String location,
+            final MessageSource messageSource) {
+        return new ExternalizedHeaderLabelsDumpCSVStrategy(fileName, location, messageSource);
+    }
+
+    @Override
+    public void writeHeader(final String[] columnHeaders) {
+        String[] extLabelColumnHeaders = Arrays.stream(columnHeaders)
+                .map(messageKey -> this.messageSource.getMessage(messageKey, null, Locale.ENGLISH))
+                .toArray(String[]::new);
+        try {
+            this.csvWriter.writeHeader(extLabelColumnHeaders);
+        } catch (final IOException e) {
+            throw ExportException.ioException(e);
+        }
+    }
+
+    @Override
+    public void writeRow(final List<String> rowData) {
+        try {
+            this.csvWriter.write(rowData);
+        } catch (final IOException e) {
+            throw ExportException.ioException(e);
+        }
+    }
+
+    @Override
+    public void cleanUp() {
+        try {
+            this.csvWriter.close();
+            this.fileWriter.close();
+        } catch (final IOException e) {
+            log.error("Error while closing writers", e);
+        }
+    }
+}
 ```
