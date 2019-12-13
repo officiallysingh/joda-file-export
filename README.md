@@ -10,7 +10,8 @@ _**<sub>Know more about [Spring Reactor](https://projectreactor.io/docs/core/rel
 In most of the applications there is a business requirement to export/download or dump files from a data set either queried from database or any other source. Mostly developers implement this feature by writing separate Java bean to File column mapping for each use case and format of file or somewhat home grown generic library using java reflection etc. Both of these approaches either lead to a lot of boilerplate code or performance issues with Java reflection.
 
 The idea is to have the ability to access the properties of a Java bean by name without using reflection and iterating over the properties of file to write them in file columns one by one. Apart from ability to treat Java beans as a Collection, Joda Beans offers a lot more which is used to develop a generic file export library, which can be used by any Java based application. 
-Another challenge is to have a mechanism to provide the metadata such as file header column names and extendable/customisable file writing strategies such exporting to any required format CSV, Excel, PDF etc. It can perform better if the data collection part and writing this data to file happen in separate threads (Producer/Consumer).
+Another challenge is to have a mechanism to provide the metadata such as file header column names and extendable/customisable file writing strategies as exporting to any required format CSV, Excel, PDF etc. 
+It can perform better if the data collection part and writing this data to file happen in separate threads (Producer/Consumer).
 
 ## Getting started
 
@@ -23,6 +24,8 @@ mvn clean install
 ```
 
 ### Adding joda-file-export to Your Maven Project
+
+The library uses [Lombok](https://projectlombok.org/) and needs at least java 8 to compile and run. So you need to setup lombok in your favorite IDE
 
 Add below maven depenencies into your project's pom.xml
 
