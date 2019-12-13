@@ -412,8 +412,35 @@ FileExportContext.<InterBankRate>of().withJodaConverter(this.jodaConverter)
 
 As with Spring reactor Flux, nothing happens until  the flux is subscribed. Hence the export is only started once you call the export() method on ExportContex.
 
+### Error handling
+There could be IO related exceptions or Joda mis-configuration of POJOs. I all error scenarios all exceptions are wrapped into a single unchecked exception with different error codes and description message. You may get the error code when any exception occurs within the library and take any measures as per your requirements.
+
+```java
+public class ExportException extends RuntimeException {
+
+    public enum ExportExceptionType implements ErrorCodeType {
+
+        //@formatter:off
+        IO_EXCEPTION("IO exception"),
+        EMPTY_DATA_SET_EXCEPTION("Empty data set"),
+        INVALID_META_DATA_EXCEPTION("Invalid meta data");
+        //@formatter:on
+
+		.....
+		....
+    }
+
+	.....
+	....
+	
+    public ErrorCodeType exceptionType() {
+        return this.exceptionType;
+    }
+
+}
+```
 
 ### Known issues
 
-The export candidate bean may also compose other beans till any depth. But if while exported any of the composed bean is found as null, then the export would fail. So you need to make sure none of the bean objects in the data set is null. The primitives and non Joda beans properties can obviously be null. So as given in the examples Cost.java is a joda bean composed in multiple export candidate classes, the value of Cost should never be null. If you do not have any Cost value the simple initialize it with null sell and buy values.
+The export candidate bean may also compose other beans till any depth. But if while exported any of the composed bean is found as null, then the export would fail. So you need to make sure none of the bean objects in the data set is null. The primitives and non Joda beans properties can obviously be null. So as given in the examples Cost.java is a joda bean composed in multiple export candidate classes, the value of Cost should never be null. If you do not have any Cost value then simply initialize it with null sell and buy values.
 
