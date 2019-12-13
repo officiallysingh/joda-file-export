@@ -390,7 +390,7 @@ public class JodaConfig {
 }
 ```
 
-### Going reactive
+### Falling in love with reactive
 
 Normally the data to export is fetched from some database. If data set is small then you can just fetch a collection and pass the collection to export API. Or if the data set is large you may need to fetch the data page by page or in batches and sequentially push the data into a **Flux** using any of programmatically generating **Flux** strategy. There are some databases like Postgres or MongoDB, which have native reactive supporting JDBC drivers and you can simply get a **Flux** from their Spring Data repository. 
 
