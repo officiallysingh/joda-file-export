@@ -75,9 +75,10 @@ Add below maven depenencies into your project's pom.xml
 		</dependency>
 ```
 
-Git source contain the library code into below two packages package com.xebia.util.export
 
-* **com.xebia.util.export** Complete joda-file-export library code
-* **com.zcompany.example** All example code elaborating the use of library
+#### Git source contain the library code into below two packages package com.xebia.util.export
+
+* **com.xebia.util.export** Complete joda-file-export library code, copy this code into your source directory
+* **com.zcompany.example** All example code elaborating the use of library, play with the examples to understand the usage
 
 
