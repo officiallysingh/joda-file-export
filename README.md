@@ -295,7 +295,7 @@ FileExportContext.<ValueAtRisk>of("agent_specific", true).withJodaConverter(this
 You may either want to download a file in a web application or just dump the same at a given location. These are just different strategies of file writing. By default there are two strategies bundled out of box with library i.e. **DownloadCSVFileStrategy.java** and **DownloadExcelFileStrategy.java** to download file either in CSV or Excel format. But you may need your own custom file writing strategy in following cases
 
 * Need to export file in a different format such as PDF or RTF
-* Need to customise excel sheet column styles
+* Need to customize excel sheet column styles
 * Need to externalize file header column names in a properties file
 * Rather than downloading the file, you may need to dump a file at a given location.
 * By default the order of columns in file would be as per the order of properties defined in bean, in case you need to change the default order.
@@ -393,7 +393,7 @@ public class CustomWriterStrategyTest {
 }
 ```
 
-The order of columns in the file can be customised as per your needs by providing a custom File writer strategy and reordering the columns headers and row data in following methods of the strategy implementation.
+The order of columns in the file can be customized as per your needs by providing a custom File writer strategy and reordering the columns headers and row data in following methods of the strategy implementation.
 
 ```java
 @Override
@@ -496,7 +496,7 @@ FileExportContext.<InterBankRate>of().withJodaConverter(this.jodaConverter)
                     .from(emitterFlux).export();
 
 ```
-The **EmitterProcessor** is thread safe so you can push data into **FluxSink** simultaneously,the same would be available in the **Flux** for consumption. Filewriting happens in single thread to retain the order of rows.
+The **EmitterProcessor** is thread safe so you can push data into **FluxSink** simultaneously,the same would be available in the **Flux** for consumption. File writing happens in single thread to retain the order of rows.
 **As with Spring Reactor's Flux, nothing happens until  the Flux is subscribed**. **Hence the export is only started once you call the export() method on ExportContex**.
 
 ### Error handling
