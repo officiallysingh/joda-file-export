@@ -36,7 +36,7 @@ public class Timesheet implements Bean {
     @PropertyDefinition
     private Boolean billable;
 
-//    @Download(columnName = "timesheet.column.header.duration")
+//    @Export(columnName = "timesheet.column.header.duration")
 //    @PropertyDefinition
 //    private Map<DayOfWeek, Duration> timeEntries;
 

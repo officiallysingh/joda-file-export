@@ -52,7 +52,7 @@ public class BeanMetaData {
         this.overrideMetaData.keySet().forEach(propPath -> {
             if (!validPropPathSet.contains(propPath)) {
                 throw ExportException.invalidMetaDataException(
-                        "Illegal field name: " + propPath + "in @DownloadOverrides or @DownloadOverride");
+                        "Illegal field name: " + propPath + "in @ExportOverrides or @ExportOverride");
             }
         });
 
@@ -75,7 +75,7 @@ public class BeanMetaData {
                         prop.annotation(ExportOverride.class);
                         throw ExportException.invalidMetaDataException("The field " + prop.name() + " in class: "
                                 + prop.declaringType().getName()
-                                + " is annotated with both @DownloadOverrides and @DownloadOverride, can use either but not both on a particular field");
+                                + " is annotated with both @ExportOverrides and @ExportOverride, can use either but not both on a particular field");
                     } catch (NoSuchElementException ex) {
                         // Ignore
                     }
@@ -83,7 +83,7 @@ public class BeanMetaData {
                         prop.annotation(Export.class);
                         throw ExportException.invalidMetaDataException(
                                 "Field: " + prop.name() + " in class: " + prop.declaringType().getName()
-                                        + " is of bean type, so @Download is not allowed here");
+                                        + " is of bean type, so @Export is not allowed here");
                     } catch (NoSuchElementException ex) {
                         // Ignore
                     }
@@ -157,7 +157,7 @@ public class BeanMetaData {
                                 : this.contextName.equalsIgnoreCase(FileExportContext.DEFAULT_CONTEXT) ? true
                                         : Arrays.asList(downloadAnnotation.contexts()).contains(this.contextName)));
             } catch (NoSuchElementException ex) {
-                throw ExportException.invalidMetaDataException("@Download annotation is required on the field "
+                throw ExportException.invalidMetaDataException("@Export annotation is required on the field "
                         + prop.name() + " in class: " + prop.declaringType().getName());
             }
         }
