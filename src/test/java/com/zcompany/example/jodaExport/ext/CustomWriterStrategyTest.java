@@ -33,7 +33,7 @@ public class CustomWriterStrategyTest {
         final String location = "D:\\export_dump";
 
         ExportContext<Timesheet> exportContext = FileExportContext.<Timesheet>of().withJodaConverter(this.jodaConverter)
-                .download(ExternalizedHeaderLabelsDumpCSVStrategy.of(fileName, location, this.messageSource))
+                .export(ExternalizedHeaderLabelsDumpCSVStrategy.of(fileName, location, this.messageSource))
                 .from(DataProvider.getTimesheets());
 
         exportContext.export();

@@ -171,10 +171,10 @@ public class BeanMetaData {
                 downloadOverrideAnnotation.fieldName().substring(
                         downloadOverrideAnnotation.fieldName().lastIndexOf(".") + 1,
                         downloadOverrideAnnotation.fieldName().length()),
-                propQualifiedName, downloadOverrideAnnotation.download().columnName(),
-                downloadOverrideAnnotation.download().contexts().length == 0 ? true
+                propQualifiedName, downloadOverrideAnnotation.export().columnName(),
+                downloadOverrideAnnotation.export().contexts().length == 0 ? true
                         : this.contextName.equalsIgnoreCase(FileExportContext.DEFAULT_CONTEXT) ? true
-                                : Arrays.asList(downloadOverrideAnnotation.download().contexts())
+                                : Arrays.asList(downloadOverrideAnnotation.export().contexts())
                                         .contains(this.contextName));
         this.overrideMetaData.put(propQualifiedName, overrideProperty);
     }

@@ -11,5 +11,5 @@ public @interface ExportOverride {
 
     String fieldName();
     
-    Export download();
+    Export export();
 }

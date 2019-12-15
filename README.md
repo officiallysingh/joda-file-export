@@ -174,7 +174,7 @@ final HttpServletResponse response
 
 ExportContext<InterBankRate> exportContext = FileExportContext.<InterBankRate>of(true)
                     .withJodaConverter(this.jodaConverter)
-                    .downloadAsCSV("sample", response)
+                    .exportAsCSV("sample", response)
                     .from(DataProvider.getInterBankRates());
 exportContext.export();
 ```
@@ -226,8 +226,8 @@ public class ValueDateWise implements Bean {
 
     // @formatter:off
     @ExportOverrides({
-            @ExportOverride(fieldName = "sellValue", download = @Export(columnName = "Settlement Rate Sell")),
-            @ExportOverride(fieldName = "buyValue", download = @Export(columnName = "Settlement Rate Buy")) 
+            @ExportOverride(fieldName = "sellValue", export = @Export(columnName = "Settlement Rate Sell")),
+            @ExportOverride(fieldName = "buyValue", export = @Export(columnName = "Settlement Rate Buy")) 
         }
     )
     // @formatter:on
@@ -235,7 +235,7 @@ public class ValueDateWise implements Bean {
     private Cost settlement;
 ```
 
-* The nested composed classes download metadata can also be overridden by providing the complete property path as follows. Ex. Overriding nested beans property metadata **fieldName = "currency.source"**
+* The nested composed classes export metadata can also be overridden by providing the complete property path as follows. Ex. Overriding nested beans property metadata **fieldName = "currency.source"**
 
 ```java
 @AllArgsConstructor(staticName = "of")
@@ -247,8 +247,8 @@ public class ValueAtRisk implements ImmutableBean {
 
     // @formatter:off
     @ExportOverrides({
-            @ExportOverride(fieldName = "currency.source", download = @Export(columnName = "Base Currency")),
-            @ExportOverride(fieldName = "currency.target", download = @Export(columnName = "Target Currency")) 
+            @ExportOverride(fieldName = "currency.source", export = @Export(columnName = "Base Currency")),
+            @ExportOverride(fieldName = "currency.target", export = @Export(columnName = "Target Currency")) 
         }
     )
     // @formatter:on
@@ -286,7 +286,7 @@ Exporting the file with above data bean in a context is as follows, So the follo
 
 ```java
 FileExportContext.<ValueAtRisk>of("agent_specific", true).withJodaConverter(this.jodaConverter)
-                    .downloadAsCSV("context_based", response)
+                    .exportAsCSV("context_based", response)
                     .from(DataProvider.getValueAtRiskRates()).export();
 ```
 
@@ -385,7 +385,7 @@ public class CustomWriterStrategyTest {
         final String location = "D:\\export_dump";
 
         ExportContext<Timesheet> exportContext = FileExportContext.<Timesheet>of().withJodaConverter(this.jodaConverter)
-                .download(ExternalizedHeaderLabelsDumpCSVStrategy.of(fileName, location, this.messageSource))
+                .export(ExternalizedHeaderLabelsDumpCSVStrategy.of(fileName, location, this.messageSource))
                 .from(DataProvider.getTimesheets());
 
         exportContext.export();
@@ -468,7 +468,7 @@ Iterator<InterBankRate> itr = DataProvider.getInterBankRates().iterator();
         });
 
         FileExportContext.<InterBankRate>of(true).withJodaConverter(this.jodaConverter)
-                .downloadAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response).from(dataStream)
+                .exportAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response).from(dataStream)
                 .export();
 ```
 
@@ -491,7 +491,7 @@ rateSink.next(record);
 ...
 
 FileExportContext.<InterBankRate>of().withJodaConverter(this.jodaConverter)
-                    .downloadAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
+                    .exportAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
                             response)
                     .from(emitterFlux).export();
 

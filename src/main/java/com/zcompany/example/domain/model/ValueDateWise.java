@@ -32,8 +32,8 @@ public class ValueDateWise implements Bean {
 
     // @formatter:off
     @ExportOverrides({
-            @ExportOverride(fieldName = "sellValue", download = @Export(columnName = "Settlement Rate Sell")),
-            @ExportOverride(fieldName = "buyValue", download = @Export(columnName = "Settlement Rate Buy")) 
+            @ExportOverride(fieldName = "sellValue", export = @Export(columnName = "Settlement Rate Sell")),
+            @ExportOverride(fieldName = "buyValue", export = @Export(columnName = "Settlement Rate Buy")) 
         }
     )
     // @formatter:on

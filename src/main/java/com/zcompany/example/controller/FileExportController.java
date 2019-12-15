@@ -56,12 +56,12 @@ public class FileExportController {
         if (downloadFileType.isCSV()) {
             ExportContext<InterBankRate> exportContext = FileExportContext.<InterBankRate>of(true)
                     .withJodaConverter(this.jodaConverter)
-                    .downloadAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response)
+                    .exportAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response)
                     .from(DataProvider.getInterBankRates());
             exportContext.export();
         } else {
             FileExportContext.<InterBankRate>of().withJodaConverter(this.jodaConverter)
-                    .downloadAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
+                    .exportAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
                             response)
                     .from(DataProvider.getInterBankRates()).export();
         }
@@ -96,11 +96,11 @@ public class FileExportController {
 
         if (downloadFileType.isCSV()) {
             FileExportContext.<InterBankRate>of(true).withJodaConverter(this.jodaConverter)
-                    .downloadAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response)
+                    .exportAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response)
                     .from(dataStream).export();
         } else {
             FileExportContext.<InterBankRate>of().withJodaConverter(this.jodaConverter)
-                    .downloadAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
+                    .exportAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
                             response)
                     .from(dataStream).export();
         }
@@ -127,11 +127,11 @@ public class FileExportController {
 
         if (downloadFileType.isCSV()) {
             FileExportContext.<ValueAtRisk>of(contextName, true).withJodaConverter(this.jodaConverter)
-                    .downloadAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response)
+                    .exportAsCSV(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), response)
                     .from(DataProvider.getValueAtRiskRates()).export();
         } else {
             FileExportContext.<ValueAtRisk>of(contextName, true).withJodaConverter(this.jodaConverter)
-                    .downloadAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
+                    .exportAsExcel(StringUtils.isEmpty(fileName) ? "Sample" : fileName.trim(), "Sample sheet",
                             response)
                     .from(DataProvider.getValueAtRiskRates()).export();
         }

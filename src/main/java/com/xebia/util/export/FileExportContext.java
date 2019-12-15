@@ -68,11 +68,11 @@ public final class FileExportContext<T extends Bean> implements ExportContext<T>
 
     public interface ExportBuilder<T extends Bean> {
 
-        public DataBuilder<T> download(final FileWriterStrategy fileWriterStrategy);
+        public DataBuilder<T> export(final FileWriterStrategy fileWriterStrategy);
 
-        public DataBuilder<T> downloadAsCSV(final String fileName, final HttpServletResponse response);
+        public DataBuilder<T> exportAsCSV(final String fileName, final HttpServletResponse response);
 
-        public DataBuilder<T> downloadAsExcel(final String fileName, final String sheetName,
+        public DataBuilder<T> exportAsExcel(final String fileName, final String sheetName,
                 final HttpServletResponse response);
 
 //        public DataBuilder dump(final FileWriterStrategy fileWriterStrategy);
@@ -122,19 +122,19 @@ public final class FileExportContext<T extends Bean> implements ExportContext<T>
         }
 
         @Override
-        public DataBuilder<T> download(final FileWriterStrategy fileWriterStrategy) {
+        public DataBuilder<T> export(final FileWriterStrategy fileWriterStrategy) {
             this.fileWriterStrategy = fileWriterStrategy;
             return this;
         }
 
         @Override
-        public DataBuilder<T> downloadAsCSV(final String fileName, final HttpServletResponse response) {
+        public DataBuilder<T> exportAsCSV(final String fileName, final HttpServletResponse response) {
             this.fileWriterStrategy = DownloadCSVFileStrategy.of(fileName, response);
             return this;
         }
 
         @Override
-        public DataBuilder<T> downloadAsExcel(final String fileName, final String sheetName,
+        public DataBuilder<T> exportAsExcel(final String fileName, final String sheetName,
                 final HttpServletResponse response) {
             this.fileWriterStrategy = DownloadExcelFileStrategy.of(fileName, sheetName, response);
             return this;
