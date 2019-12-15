@@ -16,7 +16,7 @@ import org.joda.beans.impl.direct.DirectMetaBean;
 import org.joda.beans.impl.direct.DirectMetaProperty;
 import org.joda.beans.impl.direct.DirectMetaPropertyMap;
 
-import com.xebia.util.export.annotation.Download;
+import com.xebia.util.export.annotation.Export;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -27,11 +27,11 @@ import lombok.NoArgsConstructor;
 public class ExchangeRate implements Bean {
 
     @PropertyDefinition
-    @Download(columnName = "Ask Value")
+    @Export(columnName = "Ask Value")
     private BigDecimal askValue;
 
     @PropertyDefinition
-    @Download(columnName = "Bid Value")
+    @Export(columnName = "Bid Value")
     private BigDecimal bidValue;
 
     public static ExchangeRate zero() {

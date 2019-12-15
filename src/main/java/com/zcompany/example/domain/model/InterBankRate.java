@@ -16,7 +16,7 @@ import org.joda.beans.impl.direct.DirectMetaBean;
 import org.joda.beans.impl.direct.DirectMetaProperty;
 import org.joda.beans.impl.direct.DirectMetaPropertyMap;
 
-import com.xebia.util.export.annotation.Download;
+import com.xebia.util.export.annotation.Export;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,19 +31,19 @@ public class InterBankRate implements ImmutableBean {
     @PropertyDefinition
     private final Exchange exchange;
 
-    @Download(columnName = "Agent", contexts = "agent_specific")
+    @Export(columnName = "Agent", contexts = "agent_specific")
     @PropertyDefinition
     private final String agent;
 
-    @Download(columnName = "Bank", contexts = "bank_specific")
+    @Export(columnName = "Bank", contexts = "bank_specific")
     @PropertyDefinition
     private final String bank;
 
-    @Download(columnName = "Updated On")
+    @Export(columnName = "Updated On")
     @PropertyDefinition
     private final ZonedDateTime updatedOn;
 
-    @Download(columnName = "Status")
+    @Export(columnName = "Status")
     @PropertyDefinition
     private final Boolean status;
 

@@ -10,7 +10,7 @@ _**<sub>Know more about [Spring Reactor](https://projectreactor.io/docs/core/rel
 In most of the applications there is a business requirement to export/download or dump files from a data set either queried from database or any other source. Mostly developers implement this feature by writing separate Java bean to File column mapping for each use case and format of file or somewhat home grown generic library using java reflection etc. Both of these approaches either lead to a lot of boilerplate code or performance issues with Java reflection.
 
 The idea is to have the ability to access the properties of a Java bean by name without using reflection and iterating over the properties of file to write them in file columns one by one. Apart from ability to treat Java beans as a Collection, Joda Beans offers a lot more which is used to develop a generic file export library, which can be used by any Java based application. 
-Another challenge is to have a mechanism to provide the metadata such as file header column names and extendable/customisable file writing strategies as exporting to any required format CSV, Excel, PDF etc. 
+Another challenge is to have a mechanism to provide the metadata such as file header column names and extendable/customizable file writing strategies as exporting to any required format CSV, Excel, PDF etc. 
 It can perform better if the data collection part and writing this data to file happen in separate threads (Producer/Consumer).
 
 ## Getting started
@@ -35,8 +35,6 @@ Add below maven depenencies into your project's pom.xml
 			<joda.beans.version>2.5.0</joda.beans.version>
 			<joda.beans.maven.plugin.version>1.2.1</joda.beans.maven.plugin.version>
 			<lombok.version>1.18.4</lombok.version>
-			<joda.beans.version>2.5.0</joda.beans.version>
-			<joda.beans.maven.plugin.version>1.2.1</joda.beans.maven.plugin.version>
 			<super.csv.version>2.4.0</super.csv.version>
 			<apache.poi.version>3.17</apache.poi.version>
 			<owasp.encode.version>1.2.1</owasp.encode.version>
@@ -77,7 +75,65 @@ Add below maven depenencies into your project's pom.xml
 			<artifactId>reactor-core</artifactId>
 		</dependency>
 ```
+Add following build plugins
 
+```xml
+	<build>
+		<defaultGoal>spring-boot:run</defaultGoal>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources/</directory>
+			</testResource>
+			<testResource>
+				<directory>src/test/features</directory>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<groupId>org.joda</groupId>
+				<artifactId>joda-beans-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>joda-beans-generate</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+				
+				....
+				...
+				
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.joda</groupId>
+					<artifactId>joda-beans-maven-plugin</artifactId>
+					<version>${joda.beans.maven.plugin.version}	</version>
+				</plugin>
+				
+				....
+				...
+				
+			</plugins>
+		</pluginManagement>
+```
 
 #### Git source contain the library code into below two packages
 
@@ -125,9 +181,9 @@ exportContext.export();
 
 * POJO must be annotated with **@BeanDefinition** and extend either **Bean** or **ImmutableBean** class. 
 * All properties whose data is to be written in file must be annotated with **@PropertyDefinition**. If any property is to be ignored while file writing then do not annotate the property with **@PropertyDefinition**, hence you can ignore any properties if required.
-* All primitive properties or non Joda bean properties must be annotated with **@Download** annotation.
-* A property which is itself a Joda bean must not be annotated with **@Download** annotation, but just with **@PropertyDefinition**
-* The column name in the file where the POJO property would be exported must be given as **columnName** attribute of the **@Download**
+* All primitive properties or non Joda bean properties must be annotated with **@Export** annotation.
+* A property which is itself a Joda bean must not be annotated with **@Export** annotation, but just with **@PropertyDefinition**
+* The column name in the file where the POJO property would be exported must be given as **columnName** attribute of the **@Export**
 
 ```java
 @BeanDefinition
@@ -135,11 +191,11 @@ exportContext.export();
 public class Cost implements Bean {
 
     @PropertyDefinition
-    @Download(columnName = "Cost Sell")
+    @Export(columnName = "Cost Sell")
     private BigDecimal sellValue;
 
     @PropertyDefinition
-    @Download(columnName = "Cost Buy")
+    @Export(columnName = "Cost Buy")
     private BigDecimal buyValue;
     
     
@@ -154,7 +210,7 @@ public class Cost implements Bean {
     //-------------------------- AUTOGENERATED END --------------------------
 
 ```
-* You may have some reusable DTOs being using in multiple export candidate Bean. So depending upon use case, you may want to have the given column name in composed class or may want to override them with different column names in another export candidate Bean. The same can be done by using **@DownloadOverride** annotation. If single property column name is to be overridden then use **@DownloadOverride** or if multiple properties of the composed bean needs to be overridden then use the companion **@DownloadOverrides** annotation.
+* You may have some reusable DTOs being using in multiple export candidate Bean. So depending upon use case, you may want to have the given column name in composed class or may want to override them with different column names in another export candidate Bean. The same can be done by using **@ExportOverride** annotation. If single property column name is to be overridden then use **@ExportOverride** or if multiple properties of the composed bean needs to be overridden then use the companion **@ExportOverrides** annotation.
 
 ```java
 @BeanDefinition
@@ -165,9 +221,9 @@ public class ValueDateWise implements Bean {
     private Cost margin;
 
     // @formatter:off
-    @DownloadOverrides({
-            @DownloadOverride(fieldName = "sellValue", download = @Download(columnName = "Settlement Rate Sell")),
-            @DownloadOverride(fieldName = "buyValue", download = @Download(columnName = "Settlement Rate Buy")) 
+    @ExportOverrides({
+            @ExportOverride(fieldName = "sellValue", download = @Export(columnName = "Settlement Rate Sell")),
+            @ExportOverride(fieldName = "buyValue", download = @Export(columnName = "Settlement Rate Buy")) 
         }
     )
     // @formatter:on
@@ -175,7 +231,7 @@ public class ValueDateWise implements Bean {
     private Cost settlement;
 ```
 
-* The nested composed classes download metadata can also be overridden by providing the complete property path as follows. Ex. overridding nested beans property metadata **fieldName = "currency.source"**
+* The nested composed classes download metadata can also be overridden by providing the complete property path as follows. Ex. Overriding nested beans property metadata **fieldName = "currency.source"**
 
 ```java
 @AllArgsConstructor(staticName = "of")
@@ -186,9 +242,9 @@ public class ValueAtRisk implements ImmutableBean {
     private String id;
 
     // @formatter:off
-    @DownloadOverrides({
-            @DownloadOverride(fieldName = "currency.source", download = @Download(columnName = "Base Currency")),
-            @DownloadOverride(fieldName = "currency.target", download = @Download(columnName = "Target Currency")) 
+    @ExportOverrides({
+            @ExportOverride(fieldName = "currency.source", download = @Export(columnName = "Base Currency")),
+            @ExportOverride(fieldName = "currency.target", download = @Export(columnName = "Target Currency")) 
         }
     )
     // @formatter:on
@@ -196,7 +252,7 @@ public class ValueAtRisk implements ImmutableBean {
     private final Exchange exchange;
 ```
 
-* There could be some use cases where a class is being used in multiple scenarios but you may need different file structures exported. In such cases you can give a context name to given property as follows. While exporting the file you can optionally give a context name as an attribute of **@Download** annotation in **contexts**. If you need to exclude some properties in exported file in a specific context or scenario but include the same in another context or scenario then you can mark the property with a unique context name.
+* There could be some use cases where a class is being used in multiple scenarios but you may need different file structures exported. In such cases you can give a context name to given property as follows. While exporting the file you can optionally give a context name as an attribute of **@Export** annotation in **contexts**. If you need to exclude some properties in exported file in a specific context or scenario but include the same in another context or scenario then you can mark the property with a unique context name.
 
 While export only the properties with no context given (default context) and specified context will be included in exported file whose context names matches the given Context in **ExportContext**. 
 The properties with no given contexts i.e. in default context would always be exported but the properties given with one or multiple context names would only be exported if the export is executed in a given context.
@@ -212,11 +268,11 @@ public class InterBankRate implements ImmutableBean {
     @PropertyDefinition
     private final Exchange exchange;
 
-    @Download(columnName = "Agent", contexts = "agent_specific")
+    @Export(columnName = "Agent", contexts = "agent_specific")
     @PropertyDefinition
     private final String agent;
 
-    @Download(columnName = "Bank", contexts = {"bank_specific", "HDFC"})
+    @Export(columnName = "Bank", contexts = {"bank_specific", "HDFC"})
     @PropertyDefinition
     private final String bank;
 
@@ -371,7 +427,7 @@ public class BigDecimalJodaConverter implements TypedStringConverter<BigDecimal>
 }
 ```
 
-Similar to above type converter you may have others also. After defining all such type converters register them in global Joda convrter **StringConvert** as follows. **ExportContext** expects an instance of **StringConvert** while exporting the file. **It is recommended to have a singleton instance of StringConvert**, but in case you need different converters for same class such as in one case you want to write Boolean value as YES/NO but in other case ENABLED/DISABLED, then you may need to create multiple instances of StringConvert and use respective instance as per the conversion required. 
+Similar to above type converter you may have others also. After defining all such type converters register them in global Joda converter **StringConvert** as follows. **ExportContext** expects an instance of **StringConvert** while exporting the file. **It is recommended to have a singleton instance of StringConvert**, but in case you need different converters for same class such as in one case you want to write Boolean value as YES/NO but in other case ENABLED/DISABLED, then you may need to create multiple instances of StringConvert and use respective instance as per the conversion required. 
 You can find following type converters in source code.
 
 ```java
@@ -390,7 +446,7 @@ public class JodaConfig {
 }
 ```
 
-### Falling in love with reactive
+### Going the Reactive way
 
 Normally the data to export is fetched from some database. If data set is small then you can just fetch a collection and pass the collection to export API. Or if the data set is large you may need to fetch the data page by page or in batches and sequentially push the data into a **Flux** using any of programmatically generating **Flux** strategy. There are some databases like Postgres or MongoDB, which have native reactive supporting JDBC drivers and you can simply get a **Flux** from their Spring Data repository. 
 
@@ -423,6 +479,11 @@ EmitterProcessor<RateRecord> emitterFlux = EmitterProcessor.create();
 FluxSink<RateRecord> rateSink = emitterFlux .sink();
 
 ....
+
+// Push data into the Flux by calling the next(data) on sink as follows
+
+RateRecord record = new ......
+rateSink.next(record);
 ...
 
 FileExportContext.<InterBankRate>of().withJodaConverter(this.jodaConverter)
@@ -499,7 +560,7 @@ public class ValueAtRisk implements ImmutableBean {
 ```
 * The exported file would contain data for each Map entry's value object sequentially, Key's label would be used as a header column prefix to differentiate between the columns for different entries. Refer to below exported file for one of the examples in source code, where export candidate bean contains a **Map** with four entries where Key's label() method returns Cash, Tom, Spot and Future for each key respectively.
 
-![Sample downloaded file screenshot](https://github.com/officiallysingh/joda-file-export/blob/master/Sample_File_With_Map.jpg)
+![Sample exported file screenshot](https://github.com/officiallysingh/joda-file-export/blob/master/Sample_File_With_Map.jpg)
 
 ### Known issues
 

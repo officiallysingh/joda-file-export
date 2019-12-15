@@ -17,7 +17,7 @@ import org.joda.beans.impl.direct.DirectMetaBean;
 import org.joda.beans.impl.direct.DirectMetaProperty;
 import org.joda.beans.impl.direct.DirectMetaPropertyMap;
 
-import com.xebia.util.export.annotation.Download;
+import com.xebia.util.export.annotation.Export;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,11 +28,11 @@ import lombok.NoArgsConstructor;
 @BeanDefinition
 public class Timesheet implements Bean {
 
-    @Download(columnName = "timesheet.column.header.project")
+    @Export(columnName = "timesheet.column.header.project")
     @PropertyDefinition
     private String project;
 
-    @Download(columnName = "timesheet.column.header.billable")
+    @Export(columnName = "timesheet.column.header.billable")
     @PropertyDefinition
     private Boolean billable;
 

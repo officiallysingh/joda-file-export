@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.FIELD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Download {
+public @interface ExportOverride {
 
-    String columnName();
-
-    String[] contexts() default {};
+    String fieldName();
+    
+    Export download();
 }

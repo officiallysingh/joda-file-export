@@ -15,14 +15,12 @@ import org.joda.beans.impl.direct.DirectMetaBean;
 import org.joda.beans.impl.direct.DirectMetaProperty;
 import org.joda.beans.impl.direct.DirectMetaPropertyMap;
 
-import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @BeanDefinition
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
-@ApiModel(value = "exchange", description = "Source and Target currency along with Ask and Bid values")
 public class Exchange implements Bean {
 
     @PropertyDefinition

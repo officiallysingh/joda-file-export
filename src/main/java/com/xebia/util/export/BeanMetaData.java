@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 import org.joda.beans.Bean;
 import org.joda.beans.MetaProperty;
 
-import com.xebia.util.export.annotation.Download;
-import com.xebia.util.export.annotation.DownloadOverride;
-import com.xebia.util.export.annotation.DownloadOverrides;
+import com.xebia.util.export.annotation.Export;
+import com.xebia.util.export.annotation.ExportOverride;
+import com.xebia.util.export.annotation.ExportOverrides;
 import com.xebia.util.export.exception.ExportException;
 import com.xebia.util.export.jodaBeans.BeanProperty;
 import com.xebia.util.export.jodaBeans.Beans;
@@ -70,9 +70,9 @@ public class BeanMetaData {
             MetaProperty<?> prop = itr.next();
             if (this.beans.isBean(prop)) {
                 try {
-                    DownloadOverrides downloadOverridesAnnotation = prop.annotation(DownloadOverrides.class);
+                    ExportOverrides downloadOverridesAnnotation = prop.annotation(ExportOverrides.class);
                     try {
-                        prop.annotation(DownloadOverride.class);
+                        prop.annotation(ExportOverride.class);
                         throw ExportException.invalidMetaDataException("The field " + prop.name() + " in class: "
                                 + prop.declaringType().getName()
                                 + " is annotated with both @DownloadOverrides and @DownloadOverride, can use either but not both on a particular field");
@@ -80,19 +80,19 @@ public class BeanMetaData {
                         // Ignore
                     }
                     try {
-                        prop.annotation(Download.class);
+                        prop.annotation(Export.class);
                         throw ExportException.invalidMetaDataException(
                                 "Field: " + prop.name() + " in class: " + prop.declaringType().getName()
                                         + " is of bean type, so @Download is not allowed here");
                     } catch (NoSuchElementException ex) {
                         // Ignore
                     }
-                    for (DownloadOverride downloadOverrideAnnotation : downloadOverridesAnnotation.value()) {
+                    for (ExportOverride downloadOverrideAnnotation : downloadOverridesAnnotation.value()) {
                         addOverrideBeanProperty(propertyPath.toString() + prop.name(), downloadOverrideAnnotation);
                     }
                 } catch (NoSuchElementException e) {
                     try {
-                        DownloadOverride downloadOverrideAnnotation = prop.annotation(DownloadOverride.class);
+                        ExportOverride downloadOverrideAnnotation = prop.annotation(ExportOverride.class);
                         addOverrideBeanProperty(propertyPath.toString() + prop.name(), downloadOverrideAnnotation);
                     } catch (NoSuchElementException ex) {
                         // Ignore
@@ -149,7 +149,7 @@ public class BeanMetaData {
             }
         } else {
             try {
-                Download downloadAnnotation = prop.annotation(Download.class);
+                Export downloadAnnotation = prop.annotation(Export.class);
                 this.metaData.put(counter.intValue(), BeanProperty.of(prop.name(), propQualifiedName,
                         columnNamePrefix.isPresent() ? columnNamePrefix.get() + " " + downloadAnnotation.columnName()
                                 : downloadAnnotation.columnName(),
@@ -165,7 +165,7 @@ public class BeanMetaData {
         counter.increment();
     }
 
-    private void addOverrideBeanProperty(final String propertyPath, DownloadOverride downloadOverrideAnnotation) {
+    private void addOverrideBeanProperty(final String propertyPath, ExportOverride downloadOverrideAnnotation) {
         String propQualifiedName = propertyPath + "." + downloadOverrideAnnotation.fieldName();
         BeanProperty overrideProperty = BeanProperty.of(
                 downloadOverrideAnnotation.fieldName().substring(

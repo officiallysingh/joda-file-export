@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.FIELD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DownloadOverrides {
+public @interface ExportOverrides {
     
     /** (Required) One or more field or property mapping overrides. */
-    DownloadOverride[] value();
+    ExportOverride[] value();
 }

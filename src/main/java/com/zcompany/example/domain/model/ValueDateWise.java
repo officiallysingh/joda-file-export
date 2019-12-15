@@ -15,9 +15,9 @@ import org.joda.beans.impl.direct.DirectMetaBean;
 import org.joda.beans.impl.direct.DirectMetaProperty;
 import org.joda.beans.impl.direct.DirectMetaPropertyMap;
 
-import com.xebia.util.export.annotation.Download;
-import com.xebia.util.export.annotation.DownloadOverride;
-import com.xebia.util.export.annotation.DownloadOverrides;
+import com.xebia.util.export.annotation.Export;
+import com.xebia.util.export.annotation.ExportOverride;
+import com.xebia.util.export.annotation.ExportOverrides;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -31,9 +31,9 @@ public class ValueDateWise implements Bean {
     private Cost margin;
 
     // @formatter:off
-    @DownloadOverrides({
-            @DownloadOverride(fieldName = "sellValue", download = @Download(columnName = "Settlement Rate Sell")),
-            @DownloadOverride(fieldName = "buyValue", download = @Download(columnName = "Settlement Rate Buy")) 
+    @ExportOverrides({
+            @ExportOverride(fieldName = "sellValue", download = @Export(columnName = "Settlement Rate Sell")),
+            @ExportOverride(fieldName = "buyValue", download = @Export(columnName = "Settlement Rate Buy")) 
         }
     )
     // @formatter:on
