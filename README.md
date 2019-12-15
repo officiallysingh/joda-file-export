@@ -162,7 +162,7 @@ http://localhost:8080/api/jodaExport/withContextDownload?contextName=agent_speci
 
 ### Executing the file export
 
-Downloading a CSV file with name sample in default context, writing blank if a property's value is found to be null. Using global *StringConvert* (*jodaConverter*), to convert properties to string while writing to file, which ever property class's type converter is registered with *jodaConverter*.
+Downloading a CSV file with name sample in default context, writing blank if a property's value is found to be null. Using global `StringConvert` (`jodaConverter`), to convert properties to string while writing to file, which ever property class's type converter is registered with `jodaConverter`.
 
 ```java
 @Autowired private StringConvert jodaConverter;
