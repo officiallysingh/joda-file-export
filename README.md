@@ -35,6 +35,7 @@ Add below maven depenencies into your project's pom.xml
 			<joda.beans.version>2.5.0</joda.beans.version>
 			<joda.beans.maven.plugin.version>1.2.1</joda.beans.maven.plugin.version>
 			<lombok.version>1.18.4</lombok.version>
+			<reactor.version>3.1.12.RELEASE</reactor.version>
 			<super.csv.version>2.4.0</super.csv.version>
 			<apache.poi.version>3.17</apache.poi.version>
 			<owasp.encode.version>1.2.1</owasp.encode.version>
@@ -43,6 +44,7 @@ Add below maven depenencies into your project's pom.xml
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -73,8 +75,10 @@ Add below maven depenencies into your project's pom.xml
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core</artifactId>
+			<version>${reactor.version}</version>
 		</dependency>
 ```
+
 Add following build plugins
 
 ```xml
