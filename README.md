@@ -248,7 +248,7 @@ public class ValueAtRisk implements ImmutableBean {
     // @formatter:off
     @ExportOverrides({
             @ExportOverride(fieldName = "currency.source", export = @Export(columnName = "Base Currency")),
-            @ExportOverride(fieldName = "currency.target", export = @Export(columnName = "Target Currency")) 
+            @ExportOverride(fieldName = "currency.target", export = @Export(columnName = "Foreign Currency")) 
         }
     )
     // @formatter:on
