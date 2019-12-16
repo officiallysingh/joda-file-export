@@ -409,7 +409,7 @@ public void writeRow(final List<String> rowData) {
 
 ### Type converters
 
-The properties of bean are written in file in String format only. So it is a very basic requirement to convert the bean properties to a string in a particular format. For example you may need to format date time to a specific format while writing to file. So you can define your custom type converters as follows. All such type converters then needs to be registered in Joda StringConvert as follows. The library then automatically converts the data in a bean property depending upon the Class of property. For example by defining following type converter and registering it to global `StringConert` joda converter, each property of `BigDecimal` type would be precised to 8 decimal points in exported file.
+The properties of bean are written in file in String format only. So it is a very basic requirement to convert the bean properties to a string in a particular format. For example you may need to format date time to a specific format while writing to file. So you can define your custom type converters as follows. All such type converters then needs to be registered in Joda `StringConvert` as follows. The library then automatically converts the data in a bean property depending upon the Class of property. For example by defining following type converter and registering it to global `StringConert` joda converter, each property of `BigDecimal` type would be precised to 8 decimal points in exported file.
 
 ```java
 public class BigDecimalJodaConverter implements TypedStringConverter<BigDecimal> {
